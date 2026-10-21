@@ -1,238 +1,137 @@
-# 🤩 Modular Quest, Dialogue, Farming & Trading System (Unity)
+# Aponun Köyü
 
-This project is a fully modular and extensible system built in Unity. It features ScriptableObject-based quest and dialogue systems, dynamic farming mechanics, vehicle-driven field interactions, trading, save/load functionality, and NPC-specific relationship mechanics.
+**Anadolu'da tarım, geçim derdi ve köy siyaseti.**
 
----
+Aponun Köyü; tarımı, ticareti ve hikâye görevlerini Anadolu köyü atmosferinde buluşturan, Unity ile geliştirilen birinci şahıs bir oyun projesidir. Tarladaki işlerden köylülerle kurulan ilişkilere uzanan gündelik yaşam, siyasi taşlama ve karakter odaklı anlatıyla bir araya gelir.
 
-## 🌟 Core Features
+Oyunun merkezinde üretmek, ürününü satmak ve köyde kendi yolunu çizmek vardır. Görevler, diyaloglar ve sinematik sahneler bu yaşam döngüsüne bağlanır.
 
-* ✅ Main & Sub Quest System (ScriptableObject-based)
-* ⟲ Sequential quest progression with memory of past actions
-* 🧠 Quest step types: Buy, Sell, Harvest, Talk, GoTo
-* 📂 Visual Quest Editor for quick creation
-* 🗣️ NPC Dialogue System (subtitles + voice + trust level)
-* 🧪 Real-time tracking tools (`GameStateTracker`)
-* 📏 Save / Load system (inventory, quests, world state)
-* 🎒 Inventory system with drag-and-drop trading UI
-* 🚜 Vehicles for field interactions (planting, watering, harvesting, spraying)
-* 🤝 NPC-specific Trust Level system & character types
+> **Durum:** Aktif geliştirme aşamasında. Bu depo oyun kaynaklarını, prototipleri ve geliştirme araçlarını içerir; tamamlanmış bir oyun sürümü değildir.
 
----
+**Unity 6** · **C#** · **ScriptableObject** · **TextMeshPro**
 
-## 🌺 Harvest System
+## Oynanış ve sistemler
 
-<img src="Images/collect.gif" width="600" />
+| Sistem | Kapsam |
+| --- | --- |
+| **Tarım** | Tohum ekimi, sulama, oyun gününe bağlı büyüme aşamaları, kuruma ve hasat. |
+| **Envanter ve ticaret** | Slot ve hızlı erişim çubuğu, eşya yığınları, sürükle bırak arayüzü ve ürün satışı. |
+| **Ekonomi** | `Muhasebeci` üzerinden bakiye, ürün fiyatları ve satış kesintileri için altyapı. |
+| **Görevler** | Ana görevler ve adımlar; satın alma, satış, hasat, konuşma, konuma gitme, gün bekleme ve seçim koşulları. |
+| **Diyalog ve sinematikler** | Sesli altyazılar, satır gecikmeleri, kamera ve fade geçişleri; görev veya bölge tetikleyicilerine bağlı sahneler. |
+| **Araçlar** | WheelCollider tabanlı sürüş, yapılandırılabilir araç fiziği, binme/inme ve tarım aracı etkileşimleri. |
+| **Günlük yaşam prototipleri** | Gün döngüsüne bağlı futbol kuponu; iki maç, 1/X/2 seçimi ve kombine oran hesabı. |
+| **Kayıt sistemi** | Manuel kayıt/yükleme ve otomatik kayıt için ortak giriş; oyuncu, görev, envanter ve dünya verilerinin entegrasyonu sürüyor. |
 
-Plants (from seed to crop) follow a multi-stage growth cycle. The system covers the entire farming loop:
+Seçim adımları ve oyun durumu anahtarları mevcut. Seçimlerin hikâyedeki etkileri, sahne bağlantıları ve kayıt bütünlüğü geliştirme sürecinin bir parçası.
 
-### ⟳ Growth Mechanics
+## Geliştirme görüntüleri
 
-* Seeds (e.g., `carrot`, `tomato`, `apple`) start in the initial stage on placement
-* Each prefab includes in `SeedData`:
-  * Growth duration (days)
-  * Daily prefab transitions
-  * Watering requirement
-  * Drying time threshold
+Aşağıdaki kayıtlar farklı geliştirme aşamalarını gösterir; son görsel kaliteyi veya bütün sistemlerin güncel durumunu temsil etmeyebilir.
 
-### 💧 Watering System
+<p align="center">
+  <img src="Images/trade.gif" alt="Ürün satışı ve ticaret arayüzünün erken geliştirme kaydı" width="800" />
+</p>
 
-* Each day, the system checks all `SeedPoint` objects under `Field`
-* Watering status:
-  * Not watered: growth stops, crop dries over time
-  * Watered: progresses to next prefab stage
+<details>
+<summary><strong>Tarım ve tarla etkileşimleri</strong></summary>
 
-### 🧪 Manual Harvesting
+### Hasat
 
-* Fully grown crops become `Collectable`
-* Player interaction:
-  * Removes prefab from scene
-  * Adds item to inventory
-* Linked to `HarvestItemStep` in quest system
+<img src="Images/collect.gif" alt="Olgunlaşan ürünlerin toplanması" width="800" />
 
-### ⟳ Vehicle Harvesting
+### Tarla ve araç prototipi
 
-* Harvesting vehicles can collect all ready crops automatically
-* Fully integrated with inventory and quest systems
+<img src="Images/build.gif" alt="Tarla ve araç etkileşimlerinin geliştirme kaydı" width="800" />
 
----
+</details>
 
-## 🌾 Trading System
+<details>
+<summary><strong>Envanter</strong></summary>
 
-<img src="Images/trade.gif" width="600" />
+<img src="Images/inventory.gif" alt="Envanterde eşya taşıma ve slot etkileşimleri" width="800" />
 
-* Players can open trade menus with NPCs
-* Items can be dragged into the sell slot
-* Pressing “E” opens the NPC's shop
-* Prices defined in `ItemData`
-* Global currency managed via `GameManager`
-* Confirm sale using `Sales_UI.ConfirmSale()`
-* Fully integrated with quest steps (`BuyItemStep`, `SellItemStep`)
+</details>
 
----
+<details>
+<summary><strong>NPC etkileşimleri ve konum görevleri</strong></summary>
 
-## 💼 Inventory System
+### NPC etkileşimi
 
-<img src="Images/inventory.gif" width="600" />
+<img src="Images/npc.gif" alt="NPC ile etkileşim ve diyalog prototipi" width="800" />
 
-* Slot-based system (`ItemData` + count, icon, prefab)
-* Supports stacking, removal, splitting, moving
-* Drag-and-drop via UI
-* Connected to trading interface
+### Konuma bağlı görevler
 
----
+<img src="Images/location.gif" alt="Belirli bir konuma ulaşınca ilerleyen görev adımı" width="800" />
 
-## 🗣️ NPC Dialogue & Trust Level System
+</details>
 
-<img src="Images/npc.gif" width="600" />
+## Projeyi açma
 
-Each NPC has:
+1. Depoyu bilgisayarına klonla:
 
-* Unique `ID`, character type (friendly, neutral, aggressive)
-* `Trust Level` ranging from 0–100
+   ```bash
+   git clone https://github.com/thetruth2003/aponun_resmi_koyu-main.git
+   ```
 
-### ✨ Effects
+2. Unity Hub'da **Add / Add project from disk** ile depo kökünü seç.
+3. Unity sürümü için [ProjectVersion.txt](ProjectSettings/ProjectVersion.txt) dosyasını esas al. Depoda kayıtlı sürüm `6000.2.6f2`; aktif yerel geliştirmede `6000.5.0f1` sürümüne geçiş yapılıyor. Geçişteki uyumluluk düzenlemeleri henüz bu deponun tamamına yansımamış olabilir.
+4. İlk açılışta paketlerin çözülmesini ve asset import işlemlerinin tamamlanmasını bekle.
+5. Menü akışı için `Assets/Scenes/Main Menu.unity` sahnesini aç. Sistemleri doğrudan incelemek için aşağıdaki test sahnesini kullan.
 
-* Quest availability: locked unless trust meets threshold
-* Dialogue changes: NPC responses vary with trust
-* Trade pricing: influenced by relationship
+| Sahne | Kullanım |
+| --- | --- |
+| `Assets/Scenes/Main Menu.unity` | Ana menü ve oyuna giriş akışı. |
+| `Assets/Scenes/main/MAİN_TEST.unity` | Sistemlerin birlikte denendiği aktif test/sandbox sahnesi. Dosya adındaki `İ` karakterine dikkat et. |
+| `Assets/Scenes/main/aponun orjinal koyu.unity` | Diğer ana köy sahnesi. |
 
-Trust increases through quests, gifts, or positive dialogue decisions.  
-Dialogue assets are assigned to NPC prefabs and selected via `TrustLevel` conditions.
+`MAİN_TEST` bir geliştirme sahnesidir. Eski ve yeni bileşenler bir arada bulunduğundan sahne referansları, aktif objeler ve başlangıç akışı kontrol gerektirebilir.
 
----
+## Varsayılan kontroller
 
-## 📍 Location-Based Quests
+| Girdi | İşlev |
+| --- | --- |
+| `W A S D` / yön tuşları | Hareket |
+| Fare | Etrafa bakma |
+| `Sol Shift` | Koşma |
+| `Space` | Zıplama |
+| `E` | Etkileşim |
+| Sol tık | Seçili araca veya hedefe göre toplama ve tarım işlemi |
+| `Tab` / `F` | Envanteri açma/kapatma |
+| `Q` basılı tutma | Radial menü |
+| `1–9` | Hızlı erişim çubuğu |
+| `Esc` | Duraklatma menüsü |
+| `V` / `L` | Manuel kayıt / son kaydı yükleme |
 
-<img src="Images/location.gif" width="600" />
+Kontroller, sahnedeki etkin bileşenlere ve Inspector ayarlarına bağlı olarak değişebilir.
 
-* Locations have assigned IDs
-* Trigger completes step when player enters
-* Tracked via `GameStateTracker`
+## Kodda nereden başlamalı?
 
----
+Oynanış verileri için ScriptableObject asset'leri, sahne akışı için MonoBehaviour bileşenleri kullanılır. Görev, diyalog ve eşya içerikleri ilgili editörler ve Inspector üzerinden düzenlenir.
 
-## 🚜 Plant Mechanics
+| Alan | Başlangıç noktaları |
+| --- | --- |
+| Görevler ve seçimler | [QuestSystem](Assets/Scripts/QuestSystem), [GameStateTracker.cs](Assets/Scripts/dictionary/GameStateTracker.cs) |
+| Diyalog | [diyolog](Assets/Scripts/diyolog) |
+| Sinematik akışı | [cutscene](Assets/Scripts/cutscene), [CutsceneActivator.cs](Assets/Scripts/QuestSystem/CutsceneActivator.cs) |
+| Tarım | [farm](Assets/Scripts/farm) |
+| Ekonomi ve kupon | [market](Assets/Scripts/market) |
+| Oyuncu, envanter ve etkileşim | [player](Assets/Scripts/player) |
+| Güncel araç kontrolü | [VehicleController.cs](Assets/Scripts/cars/yeni%20car/VehicleController.cs), [VehicleConfig.cs](Assets/Scripts/cars/yeni%20car/VehicleConfig.cs) |
+| Kayıt ve yükleme | [SaveCoordinator.cs](Assets/Scripts/save/SaveCoordinator.cs) |
 
-<img src="Images/build.gif" width="600" />
+Görev düzenleyicisine Unity menüsünden **Window → Quest Editor** ile ulaşılabilir. Görev tanımları `QuestEditorAsset` ve `QuestContainer` üzerinden tutulur; adımlar ortak `IQuestStep` arayüzünü kullanır.
 
-| 🚜 Vehicle Type   | Function                            |
-| ----------------- | ------------------------------------ |
-| Seeder            | Plants seeds automatically           |
-| Water Sprayer     | Waters all plants in the field       |
-| Pesticide Sprayer | Removes harmful effects              |
-| Harvester         | Collects mature crops                |
+`SaveCoordinator`, kayıt/yükleme akışının ana girişidir. Dünya kaydının bir bölümü hâlâ `savetest` üzerinden yürür; mevcut sistem JSON dosyaları ve PlayerPrefs kullanır. Eski para ve kayıt bileşenlerini tek akışta toplama çalışması sürüyor.
 
-* All mechanics act on `SeedPoint` components under each `Field`
-* Easily extendable to support new vehicle types
+## Geliştirme odağı
 
----
-
-## 🔹 Quest System Architecture
-
-```
-[QuestEditorAsset]
-    └── [QuestContainer]
-         ├─ IQuestStep
-         │   ├─ BuyItemStep
-         │   ├─ SellItemStep
-         │   ├─ HarvestItemStep
-         │   ├─ TalkToNPCStep
-         │   └─ GoToLocationStep
-```
+- Görev, diyalog ve sinematik zincirlerini köydeki gerçek karakter ve konumlarla tamamlamak.
+- Oyuncu seçimlerinin sonraki görev ve diyaloglara etkisini genişletmek.
+- Para ve kayıt sistemlerini tek kaynağa bağlamak; kayıt/yükleme davranışını sahne ve araç geçişleriyle doğrulamak.
+- Araç modellerini, fizik ayarlarını ve binme/inme akışını iyileştirmek.
+- Performansı sahne ölçümleriyle değerlendirip oynanış ve görsel sunumu geliştirmek.
 
 ---
 
-## 📁 Save / Load System
-
-* Data saved includes:
-  * Quest progress
-  * Inventory contents
-  * NPC Trust Levels
-  * Placed structures and crops
-  * Vehicle positions and states
-
-Data can be saved using JSON or Binary format.  
-Connected via `GameManager.SaveGame()` and `LoadGame()`.
-
----
-
-## 📖 Quest Journal & Tracker UI
-
-* UI panel for **active and completed quests**  
-* Displays quest title, description, and current step  
-* Updates automatically via `GameStateTracker`  
-* Provides player with a clear **quest history and progress tracking**  
-
----
-
-## 🎥 Cutscene & Camera System
-
-* **Fade-in/out transitions** for smooth scene changes  
-* **Trigger-based camera shifts** (dialogue, quest events)  
-* **CarAutoDrive integration** for waypoint-driven cutscenes  
-* Enables cinematic storytelling while remaining fully data-driven  
-
----
-
-## 🤖 NPC AI & NavMesh Integration
-
-* **NavMesh-based movement** for NPCs and vehicles  
-* Waypoint-driven logic for **patrolling and AutoDrive**  
-* **NPC interactions** tied to location and quest steps  
-* Ensures believable and automated world simulation  
-
----
-
-## 🧠 GameStateTracker (Detailed)
-
-* Central system handling global state synchronization:  
-  * Quest progress  
-  * Dialogue & trust levels  
-  * Inventory contents  
-  * Crop growth & watering state  
-  * Vehicle states and positions  
-* Connects directly with **save/load system** for persistence  
-
----
-
-## 🗂️ Data-Driven Architecture
-
-* **ScriptableObject-based design** across all systems:  
-  * `QuestData`, `ItemData`, `DialogueData`, `SeedData`  
-* All gameplay logic is **editable via Inspector** (non-hardcoded)  
-* **Easily extensible**: new quest steps, items, or NPC behaviors can be added without modifying core systems  
-
----
-
-## ⚡ Optimization & Extensibility
-
-* **Modular SaveData structure** (supports crops, NPCs, quests, vehicles, inventory)  
-* Efficient use of **NavMesh baking & occlusion culling**  
-* Architecture designed for **scalability and performance**  
-* Focus on writing **clean, reusable, and modular gameplay code**  
-
----
-
-## 🚀 Planned Features
-
-* 📖 Quest Journal (history & active tracking)
-* 🌐 Language support (EN / TR)
-* 🧐 Advanced AI / Dynamic NPC behavior
-* 🤩 Crafting system (recipe-based production)
-* 🔍 Mini-map & pin system
-* 🔊 Audio feedback for quest completion
-
----
-
-## 📆 Technologies Used
-
-* Unity 2022.3 LTS
-* C#
-* ScriptableObject
-* TextMeshPro
-* Unity UI Toolkit
-* JSON / Binary Save System
-
----
-
-**Made with ❤️ using Unity.**
+Geliştiren: [thetruth2003](https://github.com/thetruth2003)
